@@ -1,0 +1,533 @@
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import javax.swing.*;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+
+
+public class MainWindow extends JFrame 
+{
+
+	public MainWindow() 
+	{
+		setTitle("Змейка");
+		setSize(320, 368);
+		setLocation(500,200);
+		add(new GameField());
+		setUndecorated(true);
+		setVisible(true);			
+		
+	}
+
+	public static void main(String[] args)
+	{
+		   final MainWindow instance = new MainWindow();
+	        instance.setIconImage(
+	                Toolkit.getDefaultToolkit().getImage(new File("Pictures\\icon.png").toString()));
+	        instance.setVisible(true);
+
+	        while(true) {
+	        		try {
+	        			FileInputStream f = new FileInputStream("Sound\\copyf.mp3");
+	        			try {
+					
+	        				Player player = new Player(f);
+	        				player.play(); 
+	        				}
+	        			catch (JavaLayerException e) {
+	        				e.printStackTrace();
+	        				} 
+	        			}
+	        		catch (FileNotFoundException e) {
+	        			e.printStackTrace();
+	        }
+	    }
+	}
+}
+
+
+
+
+
+
+
+
+
+import javax.swing.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Random;
+
+	public class GameField extends JPanel implements ActionListener 
+{
+
+
+	private final int SIZE = 320;
+	private final int DOT_SIZE = 16;
+	private final int ALL_DOTS = 400;
+
+	private int fx;
+	private int fy = 48;
+	private Integer Score = 0;
+
+	private Image death;
+	private Image restart;
+	private Image restart2;
+	private Image fon;
+	private Image Sn;
+	private Image Snex;
+	private Image dotr;
+	private Image dotl;
+	private Image dotu;
+	private Image dotd;
+	private Image dot1l;
+	private Image dot1r;
+	private Image dot1u;
+	private Image dot1d;
+	private Image apple;
+
+	private int appleX;
+	private int appleY;
+
+      private static int xPosition;
+      private static int yPosition;
+      private static int x1Position;
+      private static int y1Position;
+
+	private int[] x = new int [ALL_DOTS];
+	private int[] y = new int [ALL_DOTS];
+	private int dots;
+
+	private Timer timer; 
+	private Timer timer2; 
+
+	private boolean About = false;
+	private boolean InGame = true;
+	private boolean right = true;
+	private boolean left = false;
+	private boolean up = false;
+	private boolean down = false;
+
+	int Rx = new Random().nextInt(19)*DOT_SIZE;
+	int Ry = new Random().nextInt(19)*DOT_SIZE+48;
+	
+	public GameField()
+  	 {
+		 intGame();
+		 LoadImages();
+		 move();
+		
+		 addKeyListener(new FieldKeyListener());
+		 setFocusable(true);
+	  }
+	
+	
+	public void intGame()
+	 {
+			dots = 3;
+			
+			x[0] = 48;
+			x[1] = 32;
+			x[2] = 16;
+			y[0] = 96;
+			y[1] = 96;
+			y[2] = 96;
+			
+		timer = new Timer(250, this);
+		timer.start();
+		repaint();
+		createApple();
+    	  }
+	
+	
+	
+	public void createApple() 
+      {
+	    for (int i =0; i<dots; i++) 
+	    {
+		 while (Rx == x[i] && Ry == y[i])
+		   { 
+			 Rx = new Random().nextInt(19)*DOT_SIZE;
+			 Ry = new Random().nextInt(19)*DOT_SIZE+48;
+		    }
+		  appleY = Ry;
+		  appleX = Rx;
+		}
+      }
+
+	
+	
+	public void LoadImages() 
+    {
+		ImageIcon f = new ImageIcon("Pictures\\fon.png"); 
+		fon = f.getImage();
+		
+		ImageIcon f2 = new ImageIcon("Pictures\\Sn.png"); 
+		Sn = f2.getImage();
+		
+		ImageIcon f3 = new ImageIcon("Pictures\\Snex.png"); 
+		Snex = f3.getImage();
+		
+		
+	  restart = Toolkit.getDefaultToolkit().createImage("Pictures\\restart.gif");
+        ImageIcon imageIcon = new ImageIcon(restart);
+        restart = imageIcon.getImage();
+        
+        restart2 = Toolkit.getDefaultToolkit().createImage("Pictures\\restart2.gif");
+        ImageIcon imageIcon99 = new ImageIcon(restart2);
+        restart2 = imageIcon99.getImage();
+	
+        apple = Toolkit.getDefaultToolkit().createImage("Pictures\\apple.gif");
+        ImageIcon imageIcon2 = new ImageIcon(apple);
+        apple = imageIcon2.getImage();
+	
+        dot1l = Toolkit.getDefaultToolkit().createImage("Pictures\\dot1l.gif");
+        ImageIcon imageIcon3 = new ImageIcon(dot1l);
+        dot1l = imageIcon3.getImage();
+        
+        
+        dot1r = Toolkit.getDefaultToolkit().createImage("Pictures\\dot1r.gif");
+        ImageIcon imageIcon4 = new ImageIcon(dot1r);
+        dot1r = imageIcon4.getImage();
+        
+        
+        dot1u = Toolkit.getDefaultToolkit().createImage("Pictures\\dot1u.gif");
+        ImageIcon imageIcon5 = new ImageIcon(dot1u);
+        dot1u = imageIcon5.getImage();
+        
+        dot1d = Toolkit.getDefaultToolkit().createImage("Pictures\\dot1d.gif");
+        ImageIcon imageIcon6 = new ImageIcon(dot1d);
+        dot1d = imageIcon6.getImage();
+        
+        
+		
+        dotu = Toolkit.getDefaultToolkit().createImage("Pictures\\dotu.gif");
+        ImageIcon imageIcon7 = new ImageIcon(dotu);
+        dotu = imageIcon7.getImage();
+        
+        dotd = Toolkit.getDefaultToolkit().createImage("Pictures\\dotd.gif");
+        ImageIcon imageIcon8 = new ImageIcon(dotd);
+        dotd = imageIcon8.getImage();
+        
+        dotr = Toolkit.getDefaultToolkit().createImage("Pictures\\dotr.gif");
+        ImageIcon imageIcon9 = new ImageIcon(dotr);
+        dotr = imageIcon9.getImage();
+        
+        dotl = Toolkit.getDefaultToolkit().createImage("Pictures\\dotl.gif");
+        ImageIcon imageIcon10 = new ImageIcon(dotl);
+        dotl = imageIcon10.getImage();
+         			
+	}
+	
+	
+	
+	protected void paintComponent(Graphics g) 
+ 	  {
+		super.paintComponent(g);
+		if(InGame) 
+ 			{
+			   g.drawImage(Sn,0,0,this);			
+			   g.drawImage(fon,0,fy,this);
+			   String str3 = Score.toString();
+			   Font f = new Font("Arial",Font.ITALIC, 14);
+			   g.setColor(Color.ORANGE);
+			   g.setFont(f);
+			   g.drawString(str3 ,10,36);
+			   g.drawImage(apple,appleX,appleY,this);
+			
+			   if(right){g.drawImage(dot1r,x[0],y[0],this);}
+			   if(left) {g.drawImage(dot1l,x[0],y[0],this);}
+			   if(up) {g.drawImage(dot1u,x[0],y[0],this);}
+			   if(down) {g.drawImage(dot1d,x[0],y[0],this);}
+			     
+ 				for (int i = 1; i < dots; i++) 
+				 {
+					if(right == true) {g.drawImage(dotr,x[i],y[i],this);}
+					if(left == true){g.drawImage(dotl,x[i],y[i],this);}
+					if(up == true) {g.drawImage(dotu,x[i],y[i],this);}
+					if(down == true) {g.drawImage(dotd,x[i],y[i],this);}
+				 }
+				
+		 	    addMouseListener(new MouseAdapter() 
+				{
+				
+		       	 @Override
+		        		public void mouseClicked(MouseEvent e) 
+			 		{
+		           	 		xPosition = e.getX();
+		           			yPosition = e.getY();
+		            
+		          		 if (xPosition >294  &&  xPosition < 320 &&  yPosition > 0  &&  yPosition < 20) 
+					 {
+		        	  	 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		        	 	  System.exit(1);
+					 }
+		       	      }
+		   		 });
+			   }
+				else 
+				    {
+					g.drawImage(Snex,0,0,this);	
+					timer.stop();
+			
+					setBackground(Color.black);
+				
+					String str = "Game over";
+					String str1 = "Do you want start new game?";
+					String str2 = "Your SCORE:";
+					String str3 = Score.toString();
+					Font f = new Font("Arial",Font.BOLD, 24);
+					g.setColor(Color.red);
+					g.setFont(f);
+					g.drawString(str,100,80);
+					Font f1 = new Font("Arial",Font.BOLD, 20);
+					g.setColor(Color.white);
+					g.setFont(f1);
+					g.drawString(str1,20,180);
+					g.drawImage(restart,130,230, this);
+					Font f2 = new Font("Arial",Font.ITALIC, 24);
+					g.setColor(Color.white);
+					g.setFont(f2);
+					g.drawString(str2,60,130);
+					g.drawString(str3,220,130);
+				
+						addMouseListener(new MouseAdapter()
+						 {
+					
+			       			 public void mouseClicked(MouseEvent e) 
+							  {
+			           				 x1Position = e.getX();
+			           				 y1Position = e.getY();
+			           				
+								   if (InGame == false) 
+								   {
+			              				   if (x1Position > 128  &&  x1Position < 188 &&  y1Position > 230  &&  y1Position < 288) 
+										  {
+			            						g.clearRect(0, 0, getWidth(), getHeight());
+			            						InGame = true;
+			            						right = true;
+			            						left = false;
+			            						up = false;
+			            						down = false;
+			            						Score = 0;
+			            						intGame();	
+			          		   				    }
+			                 			    }
+			              		      }
+			        
+			  			      });
+
+				if (InGame == false)
+			     {
+			   	
+				 if (x1Position > 0  &&  x1Position < 20 &&  y1Position > 0  &&  y1Position < 20)
+					 {
+		        	  
+		        		      g.clearRect(0, 0, getWidth(), getHeight());
+		        	  		g.drawImage(Snex,0,0,this);	
+	               	   		String str4 = "Created by S_A_V";
+	       				String str5 = "Painted by Merdrim";
+	       				String str6 = "restart";
+	       				Font r = new Font("Arial",Font.BOLD, 28);
+	       				g.setColor(Color.DARK_GRAY);
+	       				g.setFont(r);
+	       				g.drawString(str4,30,150);
+	       				g.drawString(str5,26,200);
+	       				Font r1 = new Font("Arial",Font.ITALIC, 24);
+	       				g.setColor(Color.DARK_GRAY);
+	       				g.setFont(r1);
+	       				g.drawString(str6,125,320);
+	       				g.drawImage(restart2,130,230, this);
+	       				
+			    		     }
+				    }
+			   }		
+		  }
+
+	
+	
+	 public void move()
+	 {
+		 for(int i = dots; i>0; i--) 
+		 {
+			 x[i] = x[i-1];
+			 y[i] = y[i-1];
+	 	 }
+
+		 if (left)
+		 {
+			 x[0] -= DOT_SIZE;
+		 }
+		 
+		 if (right) 
+		 {
+			 x[0] += DOT_SIZE;
+		 }
+		 
+		 if (up)
+		 {
+			 y[0] -= DOT_SIZE;
+		 }
+		 
+		 if (down)
+		 {
+			 y[0] += DOT_SIZE;
+		 }
+		 	 
+	 }
+	
+	 
+	 
+	 public void checkApple() 
+       {
+ 		 if(x[0] == appleX && y[0] == appleY) 
+		 {
+		 	dots++;
+			Score += 100;
+			createApple();
+		  }
+       }
+	 
+	 
+	 
+	 public void checkCollisius() 
+	 {
+		 for(int i = dots; i>0; i--)
+	       {
+			   if(i>0 && x[0] == x[i] && y[0] == y[i]) 
+			   {
+				 InGame = false;
+			   }
+		  }
+		 
+		 if(x[0]>316) 
+		 {
+			 InGame = false;
+		 }
+
+		 if(x[0]<0) 
+		 {
+			 InGame = false;
+		 }
+		 
+		 if(y[0]>365) 
+		 {
+			 InGame = false;
+		 }
+		 
+		 if(y[0]<40) 
+		 {
+			 InGame = false;
+		 }
+		 
+	 }
+	 
+	 
+	 
+	 
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{
+		if(InGame) 
+		{
+			checkApple();	
+			checkCollisius();
+			move();
+		}
+		
+	}
+
+	
+	
+	
+	class FieldKeyListener extends KeyAdapter
+	{
+		@Override
+		public void keyPressed(KeyEvent e) 
+		{
+			super.keyPressed(e);
+			int key = e.getKeyCode();
+			
+			if (key == KeyEvent.VK_LEFT && !right) 
+			{
+				left = true;
+				up = false;
+				down = false;
+				right = false;			
+			}
+			
+			if (key == KeyEvent.VK_RIGHT && !left) 
+			{
+				right = true;
+				up = false;
+				left = false;
+				down = false;
+			}
+					
+			if (key == KeyEvent.VK_UP && !down)
+		      {
+				up = true;
+				down = false;
+				left = false;
+				right = false;
+			}
+			
+			if (key == KeyEvent.VK_DOWN && !up)
+		      {
+				down = true;
+				up = false;
+				left = false;
+				right = false;
+			}
+
+
+			if (key == KeyEvent.VK_A && !right)
+		      {
+				left = true;
+				up = false;
+				down = false;
+				right = false;
+			}
+			
+			if (key == KeyEvent.VK_D && !left) 
+			{
+				right = true;
+				up = false;
+				left = false;
+				down = false;
+			}
+			
+			if (key == KeyEvent.VK_W && !down) 
+			{
+				up = true;
+				down = false;
+				left = false;
+				right = false;		
+			}
+			
+			if (key == KeyEvent.VK_S && !up)
+			 {
+				down = true;
+				up = false;
+				left = false;
+				right = false;
+			
+			}
+			
+		}
+	}
+}

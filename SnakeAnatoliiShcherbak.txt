@@ -47,7 +47,7 @@ public class MainWindow extends JFrame
 	        }
 	    }
 	}
-}
+    }
 
 
 
@@ -103,10 +103,10 @@ import java.util.Random;
 	private int appleX;
 	private int appleY;
 
-      private static int xPosition;
-      private static int yPosition;
-      private static int x1Position;
-      private static int y1Position;
+        private static int xPosition;
+        private static int yPosition;
+        private static int x1Position;
+        private static int y1Position;
 
 	private int[] x = new int [ALL_DOTS];
 	private int[] y = new int [ALL_DOTS];
@@ -139,7 +139,6 @@ import java.util.Random;
 	public void intGame()
 	 {
 			dots = 3;
-			
 			x[0] = 48;
 			x[1] = 32;
 			x[2] = 16;
@@ -183,7 +182,7 @@ import java.util.Random;
 		Snex = f3.getImage();
 		
 		
-	  restart = Toolkit.getDefaultToolkit().createImage("Pictures\\restart.gif");
+        restart = Toolkit.getDefaultToolkit().createImage("Pictures\\restart.gif");
         ImageIcon imageIcon = new ImageIcon(restart);
         restart = imageIcon.getImage();
         
@@ -265,21 +264,21 @@ import java.util.Random;
 		 	    addMouseListener(new MouseAdapter() 
 				{
 				
-		       	 @Override
+		       	                @Override
 		        		public void mouseClicked(MouseEvent e) 
 			 		{
 		           	 		xPosition = e.getX();
 		           			yPosition = e.getY();
 		            
-		          		 if (xPosition >294  &&  xPosition < 320 &&  yPosition > 0  &&  yPosition < 20) 
-					 {
-		        	  	 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		        	 	  System.exit(1);
-					 }
-		       	      }
+		          			 if (xPosition >294  &&  xPosition < 320 &&  yPosition > 0  &&  yPosition < 20) 
+						 {
+		        	  			 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		        	 	  		System.exit(1);
+						 }
+		       	        	 }
 		   		 });
-			   }
-				else 
+			     }
+			        else 
 				    {
 					g.drawImage(Snex,0,0,this);	
 					timer.stop();
@@ -327,31 +326,31 @@ import java.util.Random;
 			            						intGame();	
 			          		   				    }
 			                 			    }
-			              		      }
+			              		            }
 			        
 			  			      });
 
 				if (InGame == false)
-			     {
+			        {
 			   	
 				 if (x1Position > 0  &&  x1Position < 20 &&  y1Position > 0  &&  y1Position < 20)
 					 {
 		        	  
-		        		      g.clearRect(0, 0, getWidth(), getHeight());
-		        	  		g.drawImage(Snex,0,0,this);	
-	               	   		String str4 = "Created by S_A_V";
-	       				String str5 = "Painted by Merdrim";
-	       				String str6 = "restart";
-	       				Font r = new Font("Arial",Font.BOLD, 28);
-	       				g.setColor(Color.DARK_GRAY);
-	       				g.setFont(r);
-	       				g.drawString(str4,30,150);
-	       				g.drawString(str5,26,200);
-	       				Font r1 = new Font("Arial",Font.ITALIC, 24);
-	       				g.setColor(Color.DARK_GRAY);
-	       				g.setFont(r1);
-	       				g.drawString(str6,125,320);
-	       				g.drawImage(restart2,130,230, this);
+		        		       g.clearRect(0, 0, getWidth(), getHeight());
+		        	  	       g.drawImage(Snex,0,0,this);	
+	               	   			String str4 = "Created by S_A_V";
+	       					String str5 = "Painted by Merdrim";
+	       					String str6 = "restart";
+	       					Font r = new Font("Arial",Font.BOLD, 28);
+	       					g.setColor(Color.DARK_GRAY);
+	       					g.setFont(r);
+	       					g.drawString(str4,30,150);
+						g.drawString(str5,26,200);
+						Font r1 = new Font("Arial",Font.ITALIC, 24);
+	       					g.setColor(Color.DARK_GRAY);
+	       					g.setFont(r1);
+	       					g.drawString(str6,125,320);
+	       					g.drawImage(restart2,130,230, this);
 	       				
 			    		     }
 				    }
